@@ -1,0 +1,33 @@
+<style>
+    agm-map {
+        height: 400px;
+    }
+</style>
+
+<div class="container">
+    <div class="page-header">
+        <h1>Contactos</h1>
+    </div>
+    <div *ngIf="company != null">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Morada</h3>
+                <p>{{company.address}}</p>
+                <!--<p>{{company.address2}}</p>-->
+                <p>{{company.postal_code}}</p>
+            </div>
+            <div class="col-md-6">
+                <h3>Telefone/Telemóvel</h3>
+                <p>{{company.phone}}</p>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <agm-map [latitude]="company.latitude" [longitude]="company.longitude">
+                    <agm-marker [latitude]="company.latitude" [longitude]="company.longitude"></agm-marker>
+                </agm-map>
+            </div>
+        </div>
+    </div>
+</div>

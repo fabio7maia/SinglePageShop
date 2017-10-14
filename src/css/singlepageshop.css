@@ -1,0 +1,38 @@
+.brdr-bttm-1px {
+    border-bottom: 1px solid #ccc;
+}
+
+.nav>li>a.active {
+    background-color: #f67777;
+    color: #fff;
+    opacity: 0.7;
+}
+
+.nav-pills {
+    background-color: lightgray !important;
+}
+
+.nav-pills>li.active>a {
+    background-color: darkgray !important;
+}
+
+.mb15px {
+    margin-bottom: 15px !important;
+}
+
+label {
+    font-weight: normal !important;
+}
+
+span.reducedfrom {
+    font-family: Oxygen-Regular !important;
+}
+
+.logo_image {
+    height: 80px;
+    padding-top: 10px;
+}
+
+table>thead>tr>th {
+    font-family: Oxygen-Regular !important;
+}

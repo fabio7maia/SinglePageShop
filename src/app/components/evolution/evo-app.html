@@ -1,0 +1,102 @@
+<!--header-->
+<div class="header brdr-bttm-1px">
+    <div class="container">
+        <div class="head">
+            <div class=" logo">
+                <a routerLink="/"><img *ngIf="company != null && company.logotipo_image != ''" class="logo_image" src="{{WebApiUrl}}{{company.logotipo_image}}" alt=""></a>
+            </div>
+        </div>
+    </div>
+    <div class="header-top">
+        <div class="container">
+            <div class="col-sm-5 col-md-offset-2 header-login">
+                <!--<ul>
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="register.html">Register</a></li>
+                    <li><a href="checkout.html">Checkout</a></li>
+                </ul>-->
+            </div>
+
+            <div class="col-sm-5 header-social">
+                <ul *ngIf="company != null">
+                    <li *ngIf="company.twitter != null && company.twitter != ''"><a href="{{company.twitter}}" target="_blank"><i></i></a></li>
+                    <li *ngIf="company.facebook != null && company.facebook != ''"><a href="{{company.facebook}}" target="_blank"><i class="ic1"></i></a></li>
+                    <!--<li><a href="#"><i class="ic2"></i></a></li>-->
+                    <li *ngIf="company.linkedin != null && company.linkedin != ''"><a href="{{company.linkedin}}" target="_blank"><i class="ic3"></i></a></li>
+                    <!--<li><a href="#"><i class="ic4"></i></a></li>-->
+                </ul>
+                <!--<ul>
+                    <li><a href="#"><i></i></a></li>
+                    <li><a href="#"><i class="ic1"></i></a></li>
+                    <li><a href="#"><i class="ic2"></i></a></li>
+                    <li><a href="#"><i class="ic3"></i></a></li>
+                    <li><a href="#"><i class="ic4"></i></a></li>
+                </ul>-->
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="head-top">
+
+            <div class="col-sm-8 col-md-offset-2 h_menu4">
+                <nav class="navbar nav_bottom" role="navigation">
+
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header nav_2">
+                        <button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">
+    <span class="sr-only">Toggle navigation</span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    </button>
+
+                    </div>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
+                        <ul class="nav navbar-nav nav_1">
+                            <li><a class="color" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" routerLink="/">Página Inicial</a></li>
+                            <li><a class="color" routerLinkActive="active" routerLink="/checkout">Checkout</a></li>
+                            <li><a class="color" routerLinkActive="active" routerLink="/contacts">Contactos</a></li>
+                            <li><a class="color" routerLinkActive="active" routerLink="/about">Sobre nós</a></li>
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+
+                </nav>
+            </div>
+            <div class="col-sm-2 search-right">
+
+                <evo-shop-cart></evo-shop-cart>
+
+                <div class="clearfix"> </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Router Outlet -->
+<router-outlet></router-outlet>
+
+<div class="footer">
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="col-sm-6">
+                <p class="footer-class">&copy; 2017. Powered by <a href="http://inideia.com/" target="_blank">Inideia</a></p>
+            </div>
+            <div class="col-sm-6 header-social">
+                <ul *ngIf="company != null">
+                    <li *ngIf="company.twitter != null && company.twitter != ''"><a href="{{company.twitter}}" target="_blank"><i></i></a></li>
+                    <li *ngIf="company.facebook != null && company.facebook != ''"><a href="{{company.facebook}}" target="_blank"><i class="ic1"></i></a></li>
+                    <!--<li><a href="#"><i class="ic2"></i></a></li>-->
+                    <li *ngIf="company.linkedin != null && company.linkedin != ''"><a href="{{company.linkedin}}" target="_blank"><i class="ic3"></i></a></li>
+                    <!--<li><a href="#"><i class="ic4"></i></a></li>-->
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+</div>

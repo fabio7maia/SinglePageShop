@@ -1,0 +1,15 @@
+<div class="container">
+    <div class="page-header">
+        <h1>Contactos</h1>
+    </div>
+    <div *ngIf="company != null" class="row">
+        <div class="col-md-12">
+            <h3>Morada</h3>
+            <p>{{company.address}}</p>
+            <p>{{company.address2}}</p>
+            <p>{{company.postal_code}}</p>
+            <h3>Telefone/Telemóvel</h3>
+            <p>{{company.phone}}</p>
+        </div>
+    </div>
+</div>

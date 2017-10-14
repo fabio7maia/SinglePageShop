@@ -1,0 +1,477 @@
+<div class="container">
+    <!--banner-->
+    <!--<div class="banner-top">
+        <div class="container">
+            <h1>Checkout</h1>
+            <em></em>
+            <h2><a href="index.html">Home</a><label>/</label>Checkout</h2>
+        </div>
+    </div>-->
+    <div class="page-header">
+        <h1>Checkout <small *ngIf="step == 100">Confirmação de Encomenda</small></h1>
+    </div>
+
+    <style>
+        input.ng-valid[required] {
+            border-left: 5px solid #42A948;
+            /* green */
+        }
+        
+        input.ng-invalid {
+            border-left: 5px solid #a94442;
+            /* red */
+        }
+        
+        label {
+            font-size: 20px;
+        }
+        
+        .nav-pills {
+            background-color: aliceblue;
+        }
+    </style>
+
+    <div *ngIf="step == 0">
+        <div class="row" *ngIf="errors.length > 0">
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="alert alert-danger">
+                    <span *ngFor="let error of errors">{{error}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="alerts.length > 0">
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="alert alert-success">
+                    <span *ngFor="let alert of alerts">{{alert}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <a class="item_add hvr-skew-backward" routerLink="/">Ir para a página inicial</a>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="step > 0 && step < 100">
+
+        <div class="row mb15px">
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <span class="reducedfrom item_price">Total = {{shopCartData.totalPrice}} €</span>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="step > 1">
+            <div class="row form-group">
+                <div class="col-xs-12">
+                    <ul class="nav nav-pills nav-justified thumbnail setup-panel">
+                        <li *ngFor="let stepForm of steps" [ngClass]="getCssClassFormStep(stepForm.number)">
+                            <a>
+                                <h4 class="list-group-item-heading">{{stepForm.name}}</h4>
+                                <p class="list-group-item-text">{{stepForm.description}}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" #buyForm="ngForm">
+
+            <div *ngIf="step == 1">
+                <input type="hidden" [(ngModel)]="isBuyValid" id="isBuyValid" name="isBuyValid" required>
+                <div class="bs-example4" data-example-id="simple-responsive-table">
+                    <div class="table-responsive">
+                        <div class="row mb15px">
+                            <div class="col-md-4">
+                                Produto
+                            </div>
+                            <div class="col-md-2">
+                                Preço
+                            </div>
+                            <div class="col-md-2">
+                                Quantidade
+                            </div>
+                            <div class="col-md-2">
+                                Subtotal
+                            </div>
+                            <div class="col-md-2">
+                                Opções
+                            </div>
+                        </div>
+                        <div class="row mb15px" *ngFor="let product of shopCartData.products | mapToIterable:'value'">
+                            <div class="col-md-1">
+                                <img *ngIf="product.images.length > 0" src="{{WebApiUrl}}{{product.images[0].path}}" class="img-responsive" alt="">
+                                <img *ngIf="product.images.length == 0" src="{{WebApiUrl}}{{DefaultProductImage}}" class="img-responsive" alt="">
+                            </div>
+                            <div class="col-md-3">
+                                {{product.name}}<br /> {{product.description}}
+                            </div>
+                            <div class="col-md-2">
+                                {{product.promotionPrice || product.price}} €
+                            </div>
+                            <div class="col-md-2">
+                                {{product.quantity}}
+                            </div>
+                            <div class="col-md-2">
+                                {{(product.promotionPrice || product.price) * product.quantity}} €
+                            </div>
+                            <div class="col-md-2">
+                                <a class="item_add hvr-skew-backward" (click)="DelProduct(product)">Remover</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="step == 2">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="name">Nome</label>
+                            <input type="text" [(ngModel)]="buy.personalInformation.name" ngModel id="name" name="name" class="form-control" placeholder="Nome" aria-describedby="Nome" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" [(ngModel)]="buy.personalInformation.email" ngModel pattern="[a-zA-Z0-9._]+@[a-zA-Z0-9._]+\.[a-zA-Z0-9._]+$" id="email" name="email" class="form-control" placeholder="Email" aria-describedby="Email" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="nif">Nº Contribuinte</label>
+                            <input type="text" [(ngModel)]="buy.personalInformation.nif" ngModel id="nif" name="nif" class="form-control" placeholder="Nº Contribuinte" aria-describedby="nif">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="phone">Telefone/Telemóvel</label>
+                            <input type="tel" [(ngModel)]="buy.personalInformation.phone" ngModel pattern="[+]?\d{9}(\d{3})?$" id="phone" name="phone" class="form-control" placeholder="Telefone ou Telemóvel" aria-describedby="phone" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="address">Morada</label>
+                            <input type="text" [(ngModel)]="buy.personalInformation.address" ngModel id="address" name="address" class="form-control" placeholder="Morada" aria-describedby="Morada" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="address">Morada 2 Linha</label>
+                            <input type="text" [(ngModel)]="buy.personalInformation.address2" ngModel id="address2" name="address2" class="form-control" placeholder="Morada 2 Linha" aria-describedby="address2">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="postalCode">Código Postal</label>
+                            <input type="text" [(ngModel)]="buy.personalInformation.postalCode" ngModel id="postalCode" name="postalCode" class="form-control" placeholder="Código Postal" aria-describedby="postalCode" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="adicionalInformation">Informação Adicional</label>
+                            <textarea [(ngModel)]="buy.personalInformation.adicionalInformation" ngModel id="adicionalInformation" name="adicionalInformation" class="form-control" placeholder="Informação Adicional" aria-describedby="adicionalInformation"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="step == 3">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="ship_name">Nome</label>
+                            <input type="text" [(ngModel)]="buy.ship.name" ngModel id="ship_name" name="ship_name" class="form-control" placeholder="Nome" aria-describedby="Nome" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="ship_phone">Telefone/Telemóvel</label>
+                            <input type="tel" [(ngModel)]="buy.ship.phone" ngModel pattern="[+]?\d{9}(\d{3})?$" id="ship_phone" name="ship_phone" class="form-control" placeholder="Telefone ou Telemóvel" aria-describedby="phone" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="address">Morada</label>
+                            <input type="text" [(ngModel)]="buy.ship.address" ngModel id="address" name="address" class="form-control" placeholder="Morada" aria-describedby="Morada" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="address">Morada 2 Linha</label>
+                            <input type="text" [(ngModel)]="buy.ship.address2" ngModel id="address2" name="address2" class="form-control" placeholder="Morada 2 Linha" aria-describedby="address2">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="ship_postalCode">Código Postal</label>
+                            <input type="text" [(ngModel)]="buy.ship.postalCode" ngModel id="ship_postalCode" name="ship_postalCode" class="form-control" placeholder="Código Postal" aria-describedby="postalCode" required>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="zone">Zona</label>
+                            <select class="form-control" [(ngModel)]="buy.ship.zoneId" ngModel id="ship_zoneId" name="ship_zoneId" (change)="getCarriers()" required>
+                            <option value="" disabled>Selecione uma zona</option>
+                            <option *ngFor="let zone of zones" value="{{zone.id}}">{{zone.name}}</option>
+                        </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="carrier">Transportadora</label>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Seleção</th>
+                                        <th>Nome</th>
+                                        <th>Preço</th>
+                                        <th>Nº dias envio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let carrier of carriers">
+                                        <td><input type="checkbox" ngModel="carrier.selected" ngModel (change)="UpdateTotalPriceWithShipPrice(carrier)" id="ship_carrierId" name="ship_carrierId" value="{{carrier.id}}" required></td>
+                                        <td>{{carrier.carrierId}}</td>
+                                        <td>{{carrier.price}} €</td>
+                                        <td>{{carrier.ship_min_days}} - {{carrier.ship_max_days}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!--<select class="form-control" ([ngModel])="carrierId">
+                            <option *ngFor="let carrier of carriers" value="{{carrier.id}}">{{carrier.name}}</option>
+                        </select>-->
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="ship_adicionalInformation">Informação Adicional</label>
+                            <textarea [(ngModel)]="buy.ship.adicionalInformation" ngModel id="ship_adicionalInformation" name="ship_adicionalInformation" class="form-control" placeholder="Informação Adicional" aria-describedby="ship_adicionalInformation"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="step == 4">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12 col-lg-6">
+                        <div class="form-group">
+                            <label for="typePay">Método</label>
+                            <select class="form-control" [(ngModel)]="buy.paymentMethod.paymentMethodId" id="paymentMethod_paymentMethodId" name="paymentMethod_paymentMethodId" required>
+                            <option value="" disabled>Selecione um método de pagamento</option>
+                            <option *ngFor="let paymentMethod of paymentMethods" value="{{paymentMethod.id}}">{{paymentMethod.name}}</option>
+                        </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="produced">
+                            <span *ngFor="let button of buttons">
+                            <!--<a (click)="this[button.fn]()" class="{{button.class}}">{{button.label}}</a>&nbsp;-->
+                            <button *ngIf="button.type == 'button'" type="button" (click)="this[button.fn]()" class="{{button.class}}">{{button.label}}</button>
+                            <button *ngIf="button.type == 'submit'" type="submit" (click)="this[button.fn]()" class="{{button.class}}" [disabled]="!buyForm.form.valid">{{button.label}}</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="step == 100">
+        <div class="row mb15px">
+            <div class="col-md-12">
+                <div class="pull-right">
+                    <span class="reducedfrom item_price">Total = {{shopCartData.totalPrice}} €</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="produced">
+                    <button type="button" (click)="cancelBuy()" class="hvr-skew-backward">Cancelar Encomenda</button>
+                    <button type="button" (click)="confirmBuyFn()" class="hvr-skew-backward">Confirmar Encomenda</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h4>Produtos</h4>
+        </div>
+        <div class="bs-example4" data-example-id="simple-responsive-table">
+            <div class="table-responsive">
+                <div class="row">
+                    <div class="col-md-4">
+                        Produto
+                    </div>
+                    <div class="col-md-2">
+                        Preço
+                    </div>
+                    <div class="col-md-2">
+                        Quantidade
+                    </div>
+                    <div class="col-md-2">
+                        Subtotal
+                    </div>
+                </div>
+                <div class="row" *ngFor="let product of confirmBuy.products | mapToIterable:'value'">
+                    <div class="col-md-1">
+                        <img *ngIf="product.images.length > 0" src="{{WebApiUrl}}{{product.images[0].path}}" class="img-responsive" alt="">
+                        <img *ngIf="product.images.length == 0" src="{{WebApiUrl}}{{DefaultProductImage}}" class="img-responsive" alt="">
+                    </div>
+                    <div class="col-md-3">
+                        {{product.name}}<br /> {{product.description}}
+                    </div>
+                    <div class="col-md-2">
+                        {{product.price}} €
+                    </div>
+                    <div class="col-md-2">
+                        {{product.quantity}}
+                    </div>
+                    <div class="col-md-2">
+                        {{product.price * product.quantity}} €
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h4>Dados Pessoais</h4>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="name">Nome</label><br />
+                    <span>{{confirmBuy.personalInformation.name}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="email">Email</label><br />
+                    <span>{{confirmBuy.personalInformation.email}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="nif">Nº Contribuinte</label><br />
+                    <span>{{confirmBuy.personalInformation.nif}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="phone">Telefone/Telemóvel</label><br />
+                    <span>{{confirmBuy.personalInformation.phone}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="address">Morada</label><br />
+                    <span>{{confirmBuy.personalInformation.address}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="address">Morada 2 Linha</label><br />
+                    <span>{{confirmBuy.personalInformation.address2}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="postalCode">Código Postal</label><br />
+                    <span>{{confirmBuy.personalInformation.postalCode}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="adicionalInformation">Informação Adicional</label><br />
+                    <span>{{confirmBuy.personalInformation.adicionalInformation}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h4>Envio</h4>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="ship_name">Nome</label><br />
+                    <span>{{confirmBuy.ship.name}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="ship_phone">Telefone/Telemóvel</label><br />
+                    <span>{{confirmBuy.ship.phone}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="address">Morada</label><br />
+                    <span>{{confirmBuy.ship.address}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="address">Morada 2 Linha</label><br />
+                    <span>{{confirmBuy.ship.address2}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="ship_postalCode">Código Postal</label><br />
+                    <span>{{confirmBuy.ship.postalCode}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="zone">Zona</label><br />
+                    <span>{{confirmBuy.ship.zone}}</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="carrier">Transportadora</label><br />
+                    <span *ngIf="confirmBuy.ship.carrier">{{confirmBuy.ship.carrier}}, preço {{confirmBuy.ship.carrier_price}} €, com duração prevista entre {{confirmBuy.ship.carrier_min_days}} e {{confirmBuy.ship.carrier_max_days}} dias</span>
+                    <span *ngIf="!confirmBuy.ship.carrier">Não definida</span>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="ship_adicionalInformation">Informação Adicional</label><br />
+                    <span>{{confirmBuy.ship.adicionalInformation}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h4>Pagamento</h4>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-6">
+                <div class="form-group">
+                    <label for="typePay">Método</label><br />
+                    <span>{{confirmBuy.paymentMethod.paymentMethod}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="produced">
+                        <button type="button" (click)="cancelBuy()" class="hvr-skew-backward">Cancelar Encomenda</button>
+                        <button type="button" (click)="confirmBuyFn()" class="hvr-skew-backward">Confirmar Encomenda</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

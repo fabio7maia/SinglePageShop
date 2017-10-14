@@ -1,0 +1,19 @@
+<style>
+    a {
+        cursor: pointer;
+    }
+    
+    a:hover {
+        text-decoration: none;
+    }
+</style>
+
+<div class="cart box_1">
+    <a routerLink="/checkout">
+        <h3>
+            <div class="total">
+                <span class="simpleCart_total">{{shopCartData.totalPrice | toDecimal:2}} €</span></div>
+            <img src="assets/images/cart.png" alt="" /></h3>
+    </a>
+    <p><a (click)="EmptyShopCart()" class="simpleCart_empty">Limpar Carrinho</a></p>
+</div>

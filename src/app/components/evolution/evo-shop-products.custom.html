@@ -1,0 +1,45 @@
+<!--products-->
+<div class="row" *ngFor="let category of categories">
+    <div class="col-md-12">
+        <div class="content-mid">
+            <h3>{{category}}</h3>
+            <label class="line"></label>
+            <div class="mid-popular">
+                <div *ngFor="let product of products">
+                    <div *ngIf="category == product.categoryId" class="col-md-3 item-grid simpleCart_shelfItem">
+                        <div class=" mid-pop">
+                            <div class="pro-img">
+                                <a [routerLink]="['product', product.id]">
+                                    <img *ngIf="product.images.length > 0" src="{{WebApiUrl}}{{product.images[0].path}}" class="img-responsive" alt="">
+                                    <img *ngIf="product.images.length == 0" src="{{WebApiUrl}}{{DefaultProductImage}}" class="img-responsive" alt="">
+                                </a>
+                            </div>
+                            <div class="mid-1">
+                                <div class="women">
+                                    <div class="women-top">
+                                        <h6><a [routerLink]="['product', product.id]">{{product.name}}</a></h6>
+                                    </div>
+                                    <div class="img item_add">
+                                        <a href="javascript:;" (click)="AddProductShopCart(product)"><img src="images/ca.png" alt=""></a>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="mid-2">
+                                    <p *ngIf="product.promotionPrice"><label>{{product.price}} €</label><em class="item_price">{{product.promotionPrice}} €</em></p>
+                                    <p *ngIf="!product.promotionPrice"><label></label><em class="item_price">{{product.price}} €</em></p>
+                                    <div class="block">
+                                        <div class="starbox small ghosting"> </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--//products-->
+    </div>
+</div>

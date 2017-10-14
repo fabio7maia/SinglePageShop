@@ -1,0 +1,83 @@
+<div class="container">
+
+    <!--banner-->
+    <!--<div class="banner-top">
+    <div class="container">
+        <h1>Single</h1>
+        <em></em>
+        <h2><a href="index.html">Home</a><label>/</label>Single</h2>
+    </div>
+</div>-->
+
+    <div class="page-header">
+        <h1>Detalhe do Produto</h1>
+    </div>
+
+    <div *ngIf="(product | json) != ({} | json)">
+        <div class="single">
+            <div class="container">
+                <div class="col-md-12">
+                    <div class="col-md-5 grid">
+                        <div class="flexslider">
+                            <!--<ul class="slides">
+                            <li *ngIf="product.images.length > 0" data-thumb="images/si.jpg">
+                                <div class="thumb-image"> 
+                                    <img *ngIf="product.images.length > 0" src="{{WebApiUrl}}{{product.images[0].path}}" data-imagezoom="true" class="img-responsive"> 
+                                    <img *ngIf="product.images.length == 0" src="{{WebApiUrl}}{{DefaultProductImage}}" data-imagezoom="true" class="img-responsive"> 
+                                </div>
+                            </li>
+                        </ul>-->
+                            <ul class="slides" *ngIf="product && product.images.length > 0">
+                                <!--<li *ngFor="let image of product.images">-->
+                                <!--<li *ngFor="let image of product.images" data-thumb="{{WebApiUrl}}{{DefaultProductImage}}">-->
+                                <li>
+                                    <div class="thumb-image">
+                                        <img src="{{WebApiUrl}}{{product.images[0].path}}" data-imagezoom="true" class="img-responsive">
+                                    </div>
+                                </li>
+                            </ul>
+                            <ul class="slides" *ngIf="product.images.length == 0">
+                                <li>
+                                    <!--<li data-thumb="{{WebApiUrl}}{{DefaultProductImage}}">-->
+                                    <div class="thumb-image">
+                                        <img src="{{WebApiUrl}}{{DefaultProductImage}}" data-imagezoom="true" class="img-responsive">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-7 single-top-in">
+                        <div class="span_2_of_a1 simpleCart_shelfItem">
+                            <h3>{{product.name}}</h3>
+                            <p class="in-para">{{product.categoryId}}</p>
+                            <div class="price_single">
+                                <span class="reducedfrom item_price">{{(product.promotionPrice || product.price) | toDecimal:2}} €</span>
+                                <!--<a href="#">click for offer</a>-->
+                                <div class="clearfix"></div>
+                            </div>
+                            <h4 class="quick">Descrição</h4>
+                            <p class="quick_desc" [innerHTML]="product.description"></p>
+                            <div class="quantity">
+                                <div class="quantity-select">
+                                    <div class="entry value-minus" (click)="decreaseQuantity()">&nbsp;</div>
+                                    <div class="entry value"><span>{{quantity}}</span></div>
+                                    <div class="entry value-plus active" (click)="increaseQuantity()">&nbsp;</div>
+                                </div>
+                            </div>
+                            <button type="button" (click)="AddProductShopCart()" class="add-to item_add hvr-skew-backward">Adicionar ao carrinho</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="(product | json) == ({} | json)">
+        <div class="single">
+            <div class="container">
+                <div class="col-md-12 text-center">
+                    <h1>Produto não encontrado</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
