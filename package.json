@@ -40,7 +40,7 @@
         "@angular/platform-browser-dynamic": "~4.2.0",
         "@angular/platform-server": "~4.2.0",
         "@angular/router": "~4.2.0",
-        "@angular/tsc-wrapped": "~4.2.0",
+        "@angular/tsc-wrapped": "~4.4.7",
         "@angular/upgrade": "~4.2.0",
         "angular-in-memory-web-api": "~0.3.2",
         "angulartics2": "^2.2.2",
